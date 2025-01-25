@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { mockChatData, mockModelData } from "@/lib/mockData"
 
-export default function Home() {
+// manages landing page for users when they first enter the app
+export default function Home() { 
   const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo")
   const [chatHistory, setChatHistory] = useState(mockChatData)
   const [currentQuery, setCurrentQuery] = useState("")
@@ -18,6 +19,7 @@ export default function Home() {
   const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false)
   const [isNerdMode, setIsNerdMode] = useState(false)
 
+  // need to connect this to the LLMs !!! so it actually works !!!
   const handleSendMessage = (message: string) => {
     const newChat = {
       id: chatHistory.length + 1,
@@ -33,10 +35,11 @@ export default function Home() {
     setCurrentQuery("")
   }
 
+
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen overflow-hidden bg-gray-900 text-white">
       {/* Left Panel - Chat History */}
-      <div className={`w-64 bg-gray-800 p-4 transition-all duration-300 ${isLeftPanelCollapsed ? "w-16" : "w-64"}`}>
+      <div className={`bg-gray-800 p-4 transition-all duration-300 ${isLeftPanelCollapsed ? "w-16" : "w-80"}`}>
         <Button onClick={() => setIsLeftPanelCollapsed(!isLeftPanelCollapsed)} className="mb-4 w-full">
           {isLeftPanelCollapsed ? ">" : "<"}
         </Button>
