@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ModelSelector from "./components/ModelSelector"
 import ChatInterface from "./components/ChatInterface"
 import MetricsDisplay from "./components/MetricsDisplay"
@@ -8,29 +8,65 @@ import ModelComparisonChart from "./components/ModelComparisonChart"
 import ChatHistory from "./components/ChatHistory"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { mockChatData, mockModelData } from "@/lib/mockData"
+import { mockChatData, mockModelData, scriptedChats, mockMetricsData } from "@/lib/mockData"
 
 export default function Home() {
   const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo")
-  const [chatHistory, setChatHistory] = useState(mockChatData)
+  const [chatHistory, setChatHistory] = useState<typeof scriptedChats>([])
   const [currentQuery, setCurrentQuery] = useState("")
   const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false)
   const [isRightPanelCollapsed, setIsRightPanelCollapsed] = useState(false)
   const [isNerdMode, setIsNerdMode] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [currentScriptIndex, setCurrentScriptIndex] = useState(0)
+  const [metrics, setMetrics] = useState<Array<{
+    model: string
+    metric: string
+    value: number
+  }>>([])
 
-  const handleSendMessage = (message: string) => {
-    const newChat = {
-      id: chatHistory.length + 1,
-      query: message,
-      responses: {
-        "gpt-3.5-turbo": "This is a mock response from gpt-3.5-turbo.",
-        "gpt-4": "This is a mock response from gpt-4.",
-        "claude-v1": "This is a mock response from claude-v1.",
-        "llama-2-70b": "This is a mock response from llama-2-70b.",
-      },
+  const updateMetrics = (scriptIndex: number) => {
+    const query = scriptIndex === 0 ? "quantum-computing" : "machine-learning"
+    const newMetrics = Object.entries(mockMetricsData).flatMap(([model, data]) => [
+      { model, metric: "cost", value: data[query].cost },
+      { model, metric: "time", value: data[query].time },
+      { model, metric: "inputTokens", value: data[query].inputTokens },
+      { model, metric: "outputTokens", value: data[query].outputTokens }
+    ])
+    setMetrics(prev => [...prev, ...newMetrics])
+  }
+
+  const simulateTyping = async (text: string, callback: (text: string) => void) => {
+    setIsTyping(true)
+    let currentText = ""
+    
+    for (let i = 0; i < text.length; i++) {
+      currentText += text[i]
+      callback(currentText)
+      // Random delay between 50-150ms for natural typing feel
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50))
     }
-    setChatHistory([...chatHistory, newChat])
+    
+    setIsTyping(false)
+  }
+
+  const handleSendMessage = async () => {
+    if (currentScriptIndex >= scriptedChats.length) return
+    
+    const nextChat = scriptedChats[currentScriptIndex]
+    await simulateTyping(nextChat.query, setCurrentQuery)
+    
+    // Simulate response time based on the selected model
+    const responseTime = mockMetricsData[selectedModel as keyof typeof mockMetricsData][
+      currentScriptIndex === 0 ? "quantum-computing" : "machine-learning"
+    ].time * 1000 // Convert to milliseconds
+
+    await new Promise(resolve => setTimeout(resolve, responseTime))
+    
+    setChatHistory(prev => [...prev, nextChat])
+    updateMetrics(currentScriptIndex)
     setCurrentQuery("")
+    setCurrentScriptIndex(prev => prev + 1)
   }
 
   return (
@@ -52,17 +88,20 @@ export default function Home() {
           <form
             onSubmit={(e) => {
               e.preventDefault()
-              handleSendMessage(currentQuery)
+              handleSendMessage()
             }}
             className="flex space-x-2"
           >
             <Input
               value={currentQuery}
               onChange={(e) => setCurrentQuery(e.target.value)}
-              placeholder="Type your message here..."
+              placeholder={isTyping ? "" : "Type your message here..."}
               className="flex-1 bg-gray-700 text-white"
+              disabled={isTyping}
             />
-            <Button type="submit">Send</Button>
+            <Button type="submit" disabled={isTyping}>
+              {isTyping ? "Typing..." : "Send"}
+            </Button>
           </form>
         </div>
       </div>
@@ -75,11 +114,11 @@ export default function Home() {
         {!isRightPanelCollapsed && (
           <>
             <ModelSelector onSelect={setSelectedModel} selectedModel={selectedModel} />
-            <MetricsDisplay data={mockModelData.filter((d) => d.model === selectedModel)} isNerdMode={isNerdMode} />
+            <MetricsDisplay data={metrics} isNerdMode={isNerdMode} />
             <Button onClick={() => setIsNerdMode(!isNerdMode)} className="mt-4 w-full">
               {isNerdMode ? "Simple Mode" : "Nerd Mode"}
             </Button>
-            <ModelComparisonChart data={mockModelData} />
+            <ModelComparisonChart data={metrics} />
           </>
         )}
       </div>
