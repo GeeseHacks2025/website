@@ -8,7 +8,7 @@ export default function ModelSelector({
 }: { onSelect: (model: string) => void; selectedModel: string }) {
   return (
     <Select onValueChange={onSelect} defaultValue={selectedModel}>
-      <SelectTrigger className="w-full bg-gray-700 text-white">
+      <SelectTrigger className="w-full bg-gray-700/650 text-white">
         <SelectValue placeholder="Select a model" />
       </SelectTrigger>
       <SelectContent>
