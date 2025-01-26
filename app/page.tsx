@@ -41,7 +41,7 @@ export default function Home() {
       {/* Left Panel - Chat History */}
       <div className={`bg-gray-800 p-4 transition-all duration-300 ${isLeftPanelCollapsed ? "w-16" : "w-80"}`}>
         <Button onClick={() => setIsLeftPanelCollapsed(!isLeftPanelCollapsed)} className="mb-4 w-full">
-          {isLeftPanelCollapsed ? ">" : "<"}
+          {isLeftPanelCollapsed ? "→" : "Close"}
         </Button>
         {!isLeftPanelCollapsed && <ChatHistory chatHistory={chatHistory} />}
       </div>
@@ -73,7 +73,7 @@ export default function Home() {
       {/* Right Panel - Model Selection and Metrics */}
       <div className={`bg-gray-800 p-4 transition-all duration-300 ${isRightPanelCollapsed ? "w-16" : "w-80"}`}>
         <Button onClick={() => setIsRightPanelCollapsed(!isRightPanelCollapsed)} className="mb-4 w-full">
-          {isRightPanelCollapsed ? "<" : ">"}
+          {isRightPanelCollapsed ? "←" : "Close"}
         </Button>
         {!isRightPanelCollapsed && (
           <>
@@ -89,4 +89,3 @@ export default function Home() {
     </div>
   )
 }
-
