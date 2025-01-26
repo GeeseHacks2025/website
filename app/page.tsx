@@ -9,6 +9,7 @@ import ChatHistory from "./components/ChatHistory"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { mockChatData, mockModelData } from "@/lib/mockData"
+import { ScrollArea } from "@/components/ui/scroll-area"  
 
 // manages landing page for users when they first enter the app
 export default function Home() { 
@@ -78,11 +79,14 @@ export default function Home() {
         {!isRightPanelCollapsed && (
           <>
             <ModelSelector onSelect={setSelectedModel} selectedModel={selectedModel} />
-            <MetricsDisplay data={mockModelData.filter((d) => d.model === selectedModel)} isNerdMode={isNerdMode} />
-            <Button onClick={() => setIsNerdMode(!isNerdMode)} className="mt-4 w-full">
-              {isNerdMode ? "Simple Mode" : "Nerd Mode"}
-            </Button>
-            <ModelComparisonChart data={mockModelData} />
+            <ScrollArea className="h-[calc(100vh-200px)] mt-4">
+              <MetricsDisplay data={mockModelData.filter((d) => d.model === selectedModel)} isNerdMode={isNerdMode} />
+              <Button onClick={() => setIsNerdMode(!isNerdMode)} className="mt-4 w-full">
+                {isNerdMode ? "Simple Mode" : "Nerd Mode"}
+              </Button>
+              <ModelComparisonChart data={mockModelData} />
+            </ScrollArea>
+
           </>
         )}
       </div>
