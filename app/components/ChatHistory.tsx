@@ -27,7 +27,7 @@ export default function ChatHistory({ chatHistory }: ChatHistoryProps) {
       <div className="space-y-2">
         {/* For now, map first messages examples*/}
         {firstMessages.map((message) => (
-          <div key={message.id} className="bg-gray-700 rounded p-2 cursor-pointer hover:bg-gray-600">
+          <div key={message.id} className="bg-gray-700/700 rounded p-2 cursor-pointer hover:bg-blue-900">
             {message.query.length > 30 ? message.query.substring(0, 30) + "..." : message.query}
           </div>
         )

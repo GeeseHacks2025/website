@@ -34,9 +34,9 @@ export default function MetricsDisplay({ data, isNerdMode }: MetricsDisplayProps
   const metricsToShow = isNerdMode ? [...basicMetrics, ...nerdMetrics] : basicMetrics
 
   return (
-    <div className="grid grid-cols-2 gap-4 mt-4">
+    <div className="grid grid-cols-2 gap-4 mt-4 text-white">
       {metricsToShow.map((metric) => (
-        <Card key={metric.name} className="bg-gray-700">
+        <Card key={metric.name} className="bg-gray-700/700 text-white">
           <CardHeader>
             <CardTitle className="text-sm">{metric.name}</CardTitle>
           </CardHeader>

@@ -19,7 +19,8 @@ export default function ChatInterface({ chatHistory, selectedModel }: ChatInterf
           <div key={chat.id} className="space-y-2">
             {/* User Query (Align Right) */}
             <div className="flex justify-end">
-              <div className="bg-blue-500 text-white rounded-lg p-3 max-w-sm text-sm">
+              <div style={{backgroundColour: "#00B0D8"}}
+              className="bg-blue-900 text-white rounded-lg p-3 max-w-sm text-sm">
                 {chat.query}
               </div>
             </div>
