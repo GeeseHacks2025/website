@@ -40,7 +40,8 @@ export default function Home() {
   return (
     <div className="flex h-screen overflow-hidden bg-gray-900 text-white">
       {/* Left Panel - Chat History */}
-      <div className={`bg-gray-800 p-4 transition-all duration-300 ${isLeftPanelCollapsed ? "w-16" : "w-80"}`}>
+      <div style={{ backgroundColor: isLeftPanelCollapsed ? "#1F2269" : "#2B1E48" }} 
+      className={`p-4 transition-all duration-300 ${isLeftPanelCollapsed ? "w-16" : "w-80"}`}>
         <Button onClick={() => setIsLeftPanelCollapsed(!isLeftPanelCollapsed)} className="mb-4 w-full">
           {isLeftPanelCollapsed ? "→" : "Close"}
         </Button>
@@ -48,7 +49,7 @@ export default function Home() {
       </div>
 
       {/* Main Chat Interface */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col" style={{ backgroundColor: "#13121A"}}>
         <div className="flex-1 overflow-auto p-4">
           <ChatInterface chatHistory={chatHistory} selectedModel={selectedModel} />
         </div>
@@ -72,7 +73,8 @@ export default function Home() {
       </div>
 
       {/* Right Panel - Model Selection and Metrics */}
-      <div className={`bg-gray-800 p-4 transition-all duration-300 ${isRightPanelCollapsed ? "w-16" : "w-80"}`}>
+      <div style={{backgroundColor: isRightPanelCollapsed ? "#1F2269" : "#2B1E48" }}
+      className={`bg-gray-800 p-4 transition-all duration-300 ${isRightPanelCollapsed ? "w-16" : "w-80"}`}>
         <Button onClick={() => setIsRightPanelCollapsed(!isRightPanelCollapsed)} className="mb-4 w-full">
           {isRightPanelCollapsed ? "←" : "Close"}
         </Button>
